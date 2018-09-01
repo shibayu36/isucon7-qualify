@@ -11,5 +11,6 @@ sudo systemctl restart mysql
 sudo systemctl restart nginx
 sudo systemctl restart isubata.golang.service
 
-/home/isucon/isubata/bench//bin/bench -remotes=127.0.0.1 -output result.json
+cd /home/isucon/isubata/bench/
+./bin/bench -remotes=127.0.0.1 -output result.json
 jq . < result.json
