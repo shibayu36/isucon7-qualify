@@ -1,8 +1,8 @@
 #!/bin/bash
 set -ex
 
-if [ -f /var/lib/mysql/mysqld-slow.log ]; then
-    sudo mv /var/lib/mysql/mysqld-slow.log /var/lib/mysql/mysqld-slow.log.$(date "+%Y%m%d_%H%M%S")
+if [ -f /var/log/mysql/mysql-slow.log ]; then
+    sudo mv /var/log/mysql/mysql-slow.log /var/log/mysql/mysql-slow.log.$(date "+%Y%m%d_%H%M%S")
 fi
 if [ -f /var/log/nginx/access.log.tsv ]; then
     sudo mv /var/log/nginx/access.log.tsv /var/log/nginx/access.log.tsv.$(date "+%Y%m%d_%H%M%S")
