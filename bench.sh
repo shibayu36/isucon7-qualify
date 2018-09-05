@@ -12,6 +12,7 @@ sudo systemctl restart nginx
 sudo systemctl restart isubata.golang.service
 
 sudo /home/isucon/isubata/db/init.sh
+zcat /home/isucon/isubata/bench/isucon7q-initial-dataset.sql.gz | sudo mysql isubata
 
 cd /home/isucon/isubata/bench/
 ./bin/bench -remotes=127.0.0.1 -output result.json
