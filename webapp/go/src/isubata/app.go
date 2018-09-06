@@ -368,6 +368,11 @@ func jsonifyMessage(m Message) (map[string]interface{}, error) {
 }
 
 func jsonifyMessages(messages []Message) ([]map[string]interface{}, error) {
+	mjson := make([]map[string]interface{}, 0)
+	if len(messages) == 0 {
+		return mjson, nil
+	}
+
 	messageIDs := make([]interface{}, len(messages))
 	for i, v := range messages {
 		messageIDs[i] = v.UserID
@@ -386,7 +391,6 @@ func jsonifyMessages(messages []Message) ([]map[string]interface{}, error) {
 		userIDtoUserMap[u.ID] = u
 	}
 
-	mjson := make([]map[string]interface{}, 0)
 	for i := len(messages) - 1; i >= 0; i-- {
 		m := messages[i]
 		r := make(map[string]interface{})
