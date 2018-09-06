@@ -424,14 +424,9 @@ func getMessage(c echo.Context) error {
 		return err
 	}
 
-	response := make([]map[string]interface{}, 0)
-	for i := len(messages) - 1; i >= 0; i-- {
-		m := messages[i]
-		r, err := jsonifyMessage(m)
-		if err != nil {
-			return err
-		}
-		response = append(response, r)
+	response, err := jsonifyMessages(messages)
+	if err != nil {
+		return err
 	}
 
 	if len(messages) > 0 {
