@@ -367,6 +367,39 @@ func jsonifyMessage(m Message) (map[string]interface{}, error) {
 	return r, nil
 }
 
+func jsonifyMessages(messages []Message) ([]map[string]interface{}, error) {
+	messageIDs := make([]interface{}, len(messages))
+	for i, v := range messages {
+		messageIDs[i] = v.UserID
+	}
+
+	// 必要なuserを一斉にとってくる
+	users := []User{}
+	sql := "SELECT name, display_name, avatar_icon FROM user WHERE id IN (?" + strings.Repeat(",?", len(messages) - 1) + ")"
+	err := db.Get(&users, sql, messageIDs...)
+	if err != nil {
+		return nil, err
+	}
+
+	userIDtoUserMap := make(map[int64]User)
+	for _, u := range users {
+		userIDtoUserMap[u.ID] = u
+	}
+
+	mjson := make([]map[string]interface{}, 0)
+	for i := len(messages) - 1; i >= 0; i-- {
+		m := messages[i]
+		r := make(map[string]interface{})
+		r["id"] = m.ID
+		r["user"] = userIDtoUserMap[m.UserID]
+		r["date"] = m.CreatedAt.Format("2006/01/02 15:04:05")
+		r["content"] = m.Content
+		mjson = append(mjson, r)
+	}
+
+	return mjson, nil
+}
+
 func getMessage(c echo.Context) error {
 	userID := sessUserID(c)
 	if userID == 0 {
@@ -524,13 +557,9 @@ func getHistory(c echo.Context) error {
 		return err
 	}
 
-	mjson := make([]map[string]interface{}, 0)
-	for i := len(messages) - 1; i >= 0; i-- {
-		r, err := jsonifyMessage(messages[i])
-		if err != nil {
-			return err
-		}
-		mjson = append(mjson, r)
+	mjson, err := jsonifyMessages(messages)
+	if err != nil {
+		return err
 	}
 
 	channels := []ChannelInfo{}
