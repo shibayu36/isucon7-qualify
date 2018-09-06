@@ -373,15 +373,15 @@ func jsonifyMessages(messages []Message) ([]map[string]interface{}, error) {
 		return mjson, nil
 	}
 
-	messageIDs := make([]interface{}, len(messages))
+	userIds := make([]interface{}, len(messages))
 	for i, v := range messages {
-		messageIDs[i] = v.UserID
+		userIds[i] = v.UserID
 	}
 
 	// 必要なuserを一斉にとってくる
 	users := []User{}
-	sql := "SELECT name, display_name, avatar_icon FROM user WHERE id IN (?" + strings.Repeat(",?", len(messages) - 1) + ")"
-	err := db.Select(&users, sql, messageIDs...)
+	sql := "SELECT id, name, display_name, avatar_icon FROM user WHERE id IN (?" + strings.Repeat(",?", len(messages) - 1) + ")"
+	err := db.Select(&users, sql, userIds...)
 	if err != nil {
 		return nil, err
 	}
