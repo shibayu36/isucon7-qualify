@@ -11,6 +11,8 @@ sudo systemctl restart mysql
 sudo systemctl restart nginx
 sudo systemctl restart isubata.perl.service
 
+sleep 3
+
 # ベンチのたびに初期データ投入するのは厳しそう
 if [ $INIT_DATABASE ]; then
   sudo /home/isucon/isubata/db/init.sh
