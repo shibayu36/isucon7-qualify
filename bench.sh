@@ -9,7 +9,7 @@ if [ -f /var/log/nginx/access.log.tsv ]; then
 fi
 sudo systemctl restart mysql
 sudo systemctl restart nginx
-sudo systemctl restart isubata.golang.service
+sudo systemctl restart isubata.perl.service
 
 # ベンチのたびに初期データ投入するのは厳しそう
 if [ $INIT_DATABASE ]; then
