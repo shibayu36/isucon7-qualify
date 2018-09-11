@@ -15,6 +15,17 @@ my $root_dir = File::Basename::dirname(__FILE__);
 my $app      = Isubata::Web->psgi($root_dir);
 
 builder {
+    enable sub {
+        my $app = shift;
+        sub {
+            my $env = shift;
+            DB::enable_profile();
+            my $res = $app->($env);
+            DB::disable_profile();
+            return $res;
+        };
+    };
+
     enable 'Static',
         path => qr!^/(?:(?:css|js|fonts)/|favicon\.ico$)!,
         root => $root_dir . '/../public';
